@@ -1,6 +1,5 @@
-import React from 'react'
-import { Sparkles } from 'lucide-react';
-
+import React from "react";
+import { Sparkles } from "lucide-react";
 
 const HeroSection = () => {
   return (
@@ -11,14 +10,14 @@ const HeroSection = () => {
             <Sparkles className="h-8 w-8 text-indigo-600 animate-pulse" />
           </div>
           <h1 className="text-4xl font-bold text-gray-900 tracking-tight sm:text-5xl mb-3">
-            Welcome back, 
+            Welcome back, to Admin Panel
           </h1>
-          
+
           <div className="h-1 w-20 bg-indigo-600 mx-auto mt-8 rounded-full" />
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default HeroSection
+export default HeroSection;

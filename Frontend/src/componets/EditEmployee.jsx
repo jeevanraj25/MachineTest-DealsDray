@@ -19,12 +19,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 const EditEmployee = () => {
-  const [position, setPosition] = useState(""); 
+  const [position, setPosition] = useState("");
+  const navigate = useNavigate();
   const { id } = useParams();
   const [data, setData] = useState({
     name: "",
@@ -53,8 +54,6 @@ const EditEmployee = () => {
     getEmployee();
   }, [id]);
 
-
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -64,28 +63,36 @@ const EditEmployee = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-  
-    
-   
-  
+
+    const formData = new FormData();
+
+    formData.append("name", data.name);
+    formData.append("email", data.email);
+    formData.append("phoneno", data.phoneno);
+    formData.append("designation", data.designation);
+    formData.append("gender", data.gender);
+    formData.append("course", data.course);
+
+    formData.append("image", data.image);
     try {
       const res = await axios.put(
         `http://localhost:3000/api/employee/updateemployees/${id}`,
-        data,
+        formData,
         {
-          withCredentials: true
+          withCredentials: true,
         }
       );
-  
+
       if (res.data) {
         toast.success(res.data.message);
+        navigate("/employee");
       }
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
     }
   };
-  
+
   return (
     <div className="flex items-center justify-center my-5">
       <Card className="w-[500px]">
@@ -129,7 +136,9 @@ const EditEmployee = () => {
                   id="phoneno"
                   type="tel"
                   value={data.phoneno}
-                  onChange={(e) => setData({ ...data, phoneno: e.target.value.toString() })}
+                  onChange={(e) =>
+                    setData({ ...data, phoneno: e.target.value.toString() })
+                  }
                   className="flex-1"
                   placeholder="Enter Mobile No"
                 />
@@ -152,7 +161,9 @@ const EditEmployee = () => {
                           setData({ ...data, designation: value });
                         }}
                       >
-                        <DropdownMenuRadioItem value="HR">HR</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="HR">
+                          HR
+                        </DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="Sales">
                           Sales
                         </DropdownMenuRadioItem>
@@ -171,9 +182,7 @@ const EditEmployee = () => {
                 </Label>
                 <RadioGroup
                   value={data.gender}
-                  onValueChange={(value) =>
-                    setData({ ...data, gender: value })
-                  }
+                  onValueChange={(value) => setData({ ...data, gender: value })}
                   className="flex items-center space-x-4"
                 >
                   <div className="flex items-center space-x-2">
@@ -193,9 +202,7 @@ const EditEmployee = () => {
                 </Label>
                 <RadioGroup
                   value={data.course}
-                  onValueChange={(value) =>
-                    setData({ ...data, course: value })
-                  }
+                  onValueChange={(value) => setData({ ...data, course: value })}
                   className="flex items-center space-x-4"
                 >
                   <div className="flex items-center space-x-2">
@@ -235,8 +242,7 @@ const EditEmployee = () => {
         </CardFooter>
       </Card>
     </div>
- 
   );
-}
+};
 
 export default EditEmployee;

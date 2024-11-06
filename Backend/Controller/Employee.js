@@ -77,7 +77,7 @@ export const updateEmployee = async (req, res) => {
   try {
    
     const { name, email, phoneno, designation, gender, course } = req.body;
-    const image = req.file; 
+   
     const id = req.params.id;
 
    
@@ -101,8 +101,16 @@ export const updateEmployee = async (req, res) => {
     if (designation) Employee.designation = designation;
     if (gender) Employee.gender = gender;
     if (course) Employee.course = course;
-    if (image) Employee.image = req.file.filename;  
-
+    if (req.file){
+      Employee.image =  {
+        imagename: req.file.Originalname,
+   imageData:{
+       data:req.file.buffer,
+     contentType:req.file.mimetype
+  }
+      };
+    }
+ 
     
     const updatedEmployee = await Employee.save();
 

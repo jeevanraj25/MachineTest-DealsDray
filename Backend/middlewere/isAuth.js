@@ -11,8 +11,7 @@ const isAuth = async (req, res, next) => {
             if(!token){
 
                 return res.status(400).json({
-                    msg:"token not found",
-                    success:false
+                    msg:"token not found"
                 })
             } 
            
@@ -20,11 +19,10 @@ const isAuth = async (req, res, next) => {
             if(!decode){
 
                 return res.status(400).json({  
-                    msg:"invalid token",
-                    success:false
+                    msg:"invalid token"
                 })
             }
-            // console.log(decode);
+           
             req.id = decode.userId;
             next();
 

@@ -30,60 +30,58 @@ import { useNavigate } from "react-router-dom";
 const CreateEmployee = () => {
   const [position, setPosition] = useState("");
   const navigate = useNavigate();
-  const [data,setData] = useState({
-     name:"",
-     email:"",
-     phoneno:"",
-     designation:"",
-     gender:"",
-     course:"",
-     image:""
-  })
- 
-  
-    const FileHandler = (e) => {
-  
-      setData({ ...data, image: e.target.files?.[0] });
-    };
-    
-    const submitHandler = async (e) => {
-      e.preventDefault();
-    
+  const [data, setData] = useState({
+    name: "",
+    email: "",
+    phoneno: "",
+    designation: "",
+    gender: "",
+    course: "",
+    image: "",
+  });
 
-      if (!data.image) {
-        toast.error("Please upload an image.");
-        return;
-      }
-    
-    
-      const formData = new FormData();
-    
-    
-      formData.append("name", data.name);
-      formData.append("email", data.email);
-      formData.append("phoneno", data.phoneno);
-      formData.append("designation", data.designation);
-      formData.append("gender", data.gender);
-      formData.append("course", data.course);
-    
-     
-      formData.append("image", data.image);
-    
-      try {
-        const res = await axios.post("http://localhost:3000/api/employee/addemployees", formData, {
+  const FileHandler = (e) => {
+    setData({ ...data, image: e.target.files?.[0] });
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    if (!data.image) {
+      toast.error("Please upload an image.");
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("name", data.name);
+    formData.append("email", data.email);
+    formData.append("phoneno", data.phoneno);
+    formData.append("designation", data.designation);
+    formData.append("gender", data.gender);
+    formData.append("course", data.course);
+
+    formData.append("image", data.image);
+
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/employee/addemployees",
+        formData,
+        {
           withCredentials: true,
-        });
-    
-        if (res.data) {
-          toast.success(res.data.message);
-          navigate("/employee");
         }
-      } catch (error) {
-        console.log(error);
-        toast.error(error.response?.data?.message || "Error submitting data.");
+      );
+
+      if (res.data) {
+        toast.success(res.data.message);
+        navigate("/employee");
       }
-    };
-   
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message || "Error submitting data.");
+    }
+  };
+
   console.log(data);
   return (
     <div className="flex items-center justify-center my-5">
@@ -98,7 +96,13 @@ const CreateEmployee = () => {
                 <Label htmlFor="name" className="w-[150px]">
                   Name
                 </Label>
-                <Input value={data.name} onChange={(e) => setData({...data,name:e.target.value})} id="name" className="flex-1" placeholder="Enter Name" />
+                <Input
+                  value={data.name}
+                  onChange={(e) => setData({ ...data, name: e.target.value })}
+                  id="name"
+                  className="flex-1"
+                  placeholder="Enter Name"
+                />
               </div>
 
               <div className="flex items-center space-x-2">
@@ -109,7 +113,7 @@ const CreateEmployee = () => {
                   id="email"
                   type="email"
                   value={data.email}
-                   onChange={(e) => setData({...data,email:e.target.value})}
+                  onChange={(e) => setData({ ...data, email: e.target.value })}
                   className="flex-1"
                   placeholder="Enter Email"
                 />
@@ -123,7 +127,9 @@ const CreateEmployee = () => {
                   id="mobileNo"
                   type="tel"
                   value={data.phoneno}
-                  onChange={(e) => setData({...data,phoneno:e.target.value})}
+                  onChange={(e) =>
+                    setData({ ...data, phoneno: e.target.value })
+                  }
                   className="flex-1"
                   placeholder="Enter Mobile No"
                 />
@@ -133,8 +139,8 @@ const CreateEmployee = () => {
                 <Label htmlFor="designation" className="w-[150px]">
                   Designation
                 </Label>
-                <div className="flex-1" >
-                    <DropdownMenu>
+                <div className="flex-1">
+                  <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline">
                         {position ? position : "Select Designation"}
@@ -142,9 +148,13 @@ const CreateEmployee = () => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56">
                       <DropdownMenuRadioGroup
-                       
                         value={data.designation}
-                        onValueChange={(value) => setData({ ...data, designation: value })}
+                        onValueChange={(value) =>
+                          setData(
+                            { ...data, designation: value },
+                            setPosition(value)
+                          )
+                        }
                       >
                         <DropdownMenuRadioItem value="HR">
                           HR
@@ -162,64 +172,73 @@ const CreateEmployee = () => {
               </div>
 
               <div className="flex items-center space-x-2">
-  <Label htmlFor="gender" className="w-[150px]">
-    Gender
-  </Label>
-  <RadioGroup defaultValue="option-one" className="flex items-center space-x-4" value={data.gender} onValueChange={(value) => setData({ ...data, gender: value })}>
-  <div className="flex items-center space-x-2">
-    <RadioGroupItem value="male" id="option-one" />
-    <Label htmlFor="option-one">Male</Label>
-  </div>
-  <div className="flex items-center space-x-2">
-    <RadioGroupItem value="female" id="option-two" />
-    <Label htmlFor="option-two">Female</Label>
-  </div>
-</RadioGroup>
-</div>
+                <Label htmlFor="gender" className="w-[150px]">
+                  Gender
+                </Label>
+                <RadioGroup
+                  defaultValue="option-one"
+                  className="flex items-center space-x-4"
+                  value={data.gender}
+                  onValueChange={(value) => setData({ ...data, gender: value })}
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="male" id="option-one" />
+                    <Label htmlFor="option-one">Male</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="female" id="option-two" />
+                    <Label htmlFor="option-two">Female</Label>
+                  </div>
+                </RadioGroup>
+              </div>
 
               <div className="flex items-center space-x-2">
-  <Label htmlFor="course" className="w-[150px]">
-    Course
-  </Label>
-  <div className="flex items-center space-x-2">
-    <Checkbox
-      id="mca"
-      value="MCA"
-     onClick={(e) => setData({...data,course:e.target.value})}
-    />
-    <label
-      htmlFor="mca"
-      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-    >
-      MCA
-    </label>
-    <Checkbox
-      id="bca"
-      value="BCA"
-     onClick={(e) => setData({...data,course:e.target.value})}
-    />
-    <label
-      htmlFor="bca"
-      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-    >
-      BCA
-    </label>
+                <Label htmlFor="course" className="w-[150px]">
+                  Course
+                </Label>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="mca"
+                    value="MCA"
+                    onClick={(e) =>
+                      setData({ ...data, course: e.target.value })
+                    }
+                  />
+                  <label
+                    htmlFor="mca"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    MCA
+                  </label>
+                  <Checkbox
+                    id="bca"
+                    value="BCA"
+                    onClick={(e) =>
+                      setData({ ...data, course: e.target.value })
+                    }
+                  />
+                  <label
+                    htmlFor="bca"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    BCA
+                  </label>
 
-  
-    <Checkbox
-      id="bsc"
-      value="BSC"
-      onClick={(e) => setData({...data,course:e.target.value})}
-    />
-    <label
-      htmlFor="bsc"
-      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-    >
-      BSC
-    </label>
-  </div>
-</div>
-
+                  <Checkbox
+                    id="bsc"
+                    value="BSC"
+                    onClick={(e) =>
+                      setData({ ...data, course: e.target.value })
+                    }
+                  />
+                  <label
+                    htmlFor="bsc"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    BSC
+                  </label>
+                </div>
+              </div>
 
               <div className="flex items-center space-x-2">
                 <Label htmlFor="filr" className="w-[150px]">
@@ -238,7 +257,9 @@ const CreateEmployee = () => {
           </form>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button className="w-full" onClick={submitHandler}>Submit</Button>
+          <Button className="w-full" onClick={submitHandler}>
+            Submit
+          </Button>
         </CardFooter>
       </Card>
     </div>

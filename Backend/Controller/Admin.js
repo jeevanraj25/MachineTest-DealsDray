@@ -5,7 +5,7 @@ export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Validate input
+    
     if (!username || !password) {
       return res.status(401).json({
         message: "All fields are required",
@@ -19,13 +19,20 @@ export const login = async (req, res) => {
         message: "User not exists",
       });
     }
+     
+     const isMatch =await bcrypt.compare(password,user.password);
 
-    // Generate token
+     if(!isMatch){
+       return res.status(401).json({
+          message:"Invalid password",
+       })
+     }
+
+   
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
       expiresIn: "1d",
     });
 
-    // Set token in cookie and return response
     return res
       .status(200)
       .cookie("token", token, {
@@ -54,10 +61,13 @@ export const signup = async (req, res) => {
       });
     }
 
+    const hashedPassword = await bcrypt.hash(password, 10);
     await Admin.create({
       name: username,
-      password: password,
+      password: hashedPassword,
     });
+     
+    
 
     return res.status(200).json({
       message: "admin added successful",
