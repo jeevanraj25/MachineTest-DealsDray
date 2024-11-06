@@ -112,6 +112,7 @@ export const updateEmployee = async (req, res) => {
     }
  
     
+    
     const updatedEmployee = await Employee.save();
 
     return res.status(200).json({ message: 'Employee updated successfully', employee: updatedEmployee });

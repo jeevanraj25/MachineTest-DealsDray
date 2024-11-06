@@ -8,6 +8,7 @@ const EmployeesSchema = new mongoose.Schema({
     },
     email: {
         type: String,
+        unque: true,
         required: true
     },
     phoneno: {
